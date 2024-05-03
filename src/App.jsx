@@ -1,34 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
+import ToDoList from './ToDoList'
+import All from './All'
+import Completed from './Completed'
+import UserTodoInput from './UserTodoInput'
+import 'reactjs-popup/dist/index.css'
 
+// the function here is switching between different app tabs and the return sets an onclick to change between them.
+// on the userTodoInput page i have a function that takes user input, its represented under the todowindow in a div.
+// I need to do a couple things with the user input, i need to...
+// store it in local storage and manipulate it.
+// represent the data on page.
 function App() {
-  const [count, setCount] = useState(0)
+
+    // const whatWeGetFromLocalStorage = JSON.parse(localStorage.getItem(todos))
+    // const initialState = whatWeGetFromLocalStorage ? whatWeGetFromLocalStorage : []
+    // const initialState = whatWeGetFromLocalStorage ?? []
+    const [todos, setTodos] = useState(JSON.parse(localStorage.getItem('todos')) ?? []);
+    const [view, setView] = useState("ToDoList")
+
+    useEffect(() => {
+      localStorage.setItem('todos', JSON.stringify(todos))
+    }, [ todos ])
+
+  function listSelector(){
+    console.log("view", view)
+    switch(view){
+      case "ToDoList":
+        return <ToDoList todos={todos} setTodos={setTodos} />
+        
+      case "Completed":
+        return <Completed />
+        
+      case "All":
+        return <All />
+        
+    }
+  }
+  console.log("todos array:", todos)
+  const display = listSelector();
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className='mainBody'>
+     <div className='toDoBody'>
+      <h1>todo list</h1>
+      <div className='menu'>
+        <button className='button' onClick={(() => setView("ToDoList"))}>todo</button>
+        <button className='button' onClick={(() => setView("Completed"))}>completed</button>
+        <button className='button' onClick={(() => setView("All"))}>all</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      
+      <div className='toDoWindow'>
+        {display}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <UserTodoInput todos={todos} setTodos={setTodos} />
+     </div>
+    </div>
   )
 }
 
