@@ -16,7 +16,7 @@ function App() {
     // const whatWeGetFromLocalStorage = JSON.parse(localStorage.getItem(todos))
     // const initialState = whatWeGetFromLocalStorage ? whatWeGetFromLocalStorage : []
     // const initialState = whatWeGetFromLocalStorage ?? []
-    const [todos, setTodos] = useState (JSON.parse(localStorage.getItem('todos') ?? []))
+    const [todos, setTodos] = useState(JSON.parse(localStorage.getItem('todos')) ?? []);
     const [view, setView] = useState("ToDoList")
 
     useEffect(() => {
